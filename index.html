@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>CzkFalloutBOT Services 自動重啟檔案生成</title>
+    <style>
+        /* 共用按鈕樣式 */
+
+        .actionButton {
+            background-color: blue;
+            color: white;
+            border: 2px solid gray;
+            /* 增加border-width使外框更粗 */
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        /* 下載按鈕的顏色 */
+        #downloadButton {
+            background-color: red;
+            border: 2px solid gray;
+            /* 增加border-width使外框更粗 */
+        }
+
+        #fileForm {
+            zoom: 1.2;
+            /* 設置放大倍率，例如 1.5 表示放大 150% */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="fileForm">
+        <h1>CzkFalloutBOT Services 自動重啟檔案生成</h1>
+        <input type="text" id="fileName" style="width: 300px;" placeholder="請輸入您Bot的檔案名稱(不需要輸入.exe副檔名)">
+        <br><br>
+        <!-- 使用共用按鈕樣式 -->
+        <button id="confirmButton" class="actionButton">確定</button>
+        <br><br>
+        <textarea id="outputText" rows="10" cols="40" readonly></textarea>
+        <br><br>
+        <a id="downloadButton" class="actionButton" style="display: none;">下載</a>
+    </div>
+
+    <script>
+        const fileNameInput = document.getElementById("fileName");
+        const confirmButton = document.getElementById("confirmButton");
+        const outputText = document.getElementById("outputText");
+        const downloadButton = document.getElementById("downloadButton");
+
+        confirmButton.addEventListener("click", () => {
+            const fileName = fileNameInput.value;
+            const batContent = `@echo off
+:loop
+${fileName}.exe
+echo Waiting for 10 seconds...
+timeout /t 10
+goto loop`;
+
+            outputText.value = batContent;
+
+            // 生成可下載的main.bat文件
+            const blob = new Blob([batContent], { type: "text/plain" });
+            const url = URL.createObjectURL(blob);
+            downloadButton.href = url;
+            downloadButton.download = "main.bat";
+            downloadButton.style.display = "inline-block";
+        });
+    </script>
+</body>
+</html>
